@@ -24,6 +24,59 @@ function App() {
   const [turn, setTurn] = useState(0);
 
   useEffect(() => {
+    const keyTranslation = {
+      left: 37,
+      up: 38,
+      right: 39,
+      down: 40,
+    };
+    const handleKeydown = (e) => {
+      switch (e.keyCode) {
+        case keyTranslation.left:
+          doAction("l");
+          break;
+        case keyTranslation.up:
+          doAction("u");
+          break;
+        case keyTranslation.right:
+          doAction("r");
+          break;
+        case keyTranslation.down:
+          doAction("d");
+          break;
+        default:
+          break;
+      }
+    };
+    const doAction = (response) => {
+      const copyGameMap = gameMap.slice();
+      copyGameMap[playerLocation[0]][playerLocation[1]] = "x";
+      const command = aliasFunction(response);
+      const tempPlayerLocation = movement(command, playerLocation);
+      if (
+        tempPlayerLocation[0] === gameMap.length - 1 &&
+        tempPlayerLocation[1] === gameMap.length - 1
+      ) {
+        setEndCriteria([false, false, true]);
+      }
+      copyGameMap[tempPlayerLocation[0]][tempPlayerLocation[1]] = "o";
+      setPlayerLocation(tempPlayerLocation);
+      setGameMap(copyGameMap);
+      setTurn(turn + 1);
+      setResponse("");
+      if (
+        tempPlayerLocation[0] !== copyGameMap.length - 1 &&
+        tempPlayerLocation[1] !== copyGameMap[0].length
+      )
+        setNarrative("You have advanced a turn.");
+    };
+    document.addEventListener("keydown", handleKeydown);
+    return () => {
+      document.removeEventListener("keydown", handleKeydown);
+    };
+  }, [playerLocation, gameMap, turn]);
+
+  useEffect(() => {
     if (response === "ENTER") setNarrative("You have entered the dungeon.");
   }, [response]);
 

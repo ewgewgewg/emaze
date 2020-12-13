@@ -36,20 +36,4 @@ const aliasFunction = (input) => {
   return input;
 };
 
-const goCondition = (playerLocation, enemyLocations) => {
-  let go = true;
-
-  for (let el of enemyLocations) {
-    if (el[0] === playerLocation[0] && el[1] === playerLocation[1]) {
-      go = false;
-    }
-  }
-
-  if (4 === playerLocation[0] && 4 === playerLocation[1]) {
-    go = false;
-  }
-
-  return go;
-};
-
-export { movement, aliasFunction, goCondition };
+export { movement, aliasFunction };

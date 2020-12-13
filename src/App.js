@@ -2,10 +2,9 @@ import _ from "lodash";
 import React, { useState, useEffect } from "react";
 import { TextField } from "@material-ui/core";
 import "./App.css";
-import { movement, aliasFunction, goCondition } from "./utils";
+import { movement, aliasFunction } from "./utils";
 
 function App() {
-  const [play, setPlay] = useState(true);
   const [narrative, setNarrative] = useState(
     "Welcome to the Dungeon! Would you like to ENTER? "
   );
@@ -77,10 +76,6 @@ function App() {
   }, [playerLocation, gameMap, turn]);
 
   useEffect(() => {
-    if (response === "ENTER") setNarrative("You have entered the dungeon.");
-  }, [response]);
-
-  useEffect(() => {
     if (!turn) {
       const copyGameMap = gameMap.slice();
       copyGameMap[playerLocation[0]][playerLocation[1]] = "o";
@@ -108,19 +103,9 @@ function App() {
 
   useEffect(() => {
     const [eaten, quit, win] = endCriteria;
-    if (eaten) {
-      setNarrative("You have been eaten!");
-      setTimeout(() => {
-        const tempStartDungeon = startDungeon;
-        tempStartDungeon[0][0] = "o";
-        setGameMap(tempStartDungeon);
-        setPlayerLocation([0, 0, 0, 0]);
-        setMonsterLocation([4, 0, 4, 0]);
-        setNarrative("Game reset!");
-      }, 1000);
-    }
-    if (win) {
-      setNarrative("You have won!");
+    const variableFeedback = eaten ? "been eaten" : "won";
+    if (eaten || win) {
+      setNarrative(`You have ${variableFeedback}!`);
       setTimeout(() => {
         const tempStartDungeon = startDungeon;
         tempStartDungeon[0][0] = "o";
